@@ -43,8 +43,7 @@ class ADT
     
     //constructor
     ADT(int n){
-        T adt_array[n];
-        adt = adt_array;
+        adt = new T[n]();
     };
 
     T* ADTInit(){
@@ -52,7 +51,7 @@ class ADT
     };
 
     ~ADT(){
-        
+        delete[] adt;
     };
     
     

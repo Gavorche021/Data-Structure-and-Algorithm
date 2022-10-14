@@ -11,4 +11,5 @@ int main(int argc, char *argv[])
 	int* ptr = s.ADTInit();
 	cout<< ptr[5] <<endl;
 	
+	
 }
