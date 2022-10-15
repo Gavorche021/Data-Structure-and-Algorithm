@@ -18,7 +18,7 @@ class ADT
 
     //constructor
     ADT() = default;
-    
+
     ADT(int n){
         ADTInit(n);
     };
@@ -27,6 +27,7 @@ class ADT
         capacity = n;
         adt = new T[n]();
         return adt;
+        
     };
     
 
