@@ -13,6 +13,7 @@ class ADT
     int capacity=0;
     int currentElemCount=0;
 
+
     public:
     T* adt;
 

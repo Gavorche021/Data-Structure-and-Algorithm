@@ -21,5 +21,6 @@ int main(int argc, char *argv[])
 	bool tf = s.ListEmpty();
 	cout<< ptr[0] <<endl;
 	
+	
 	return 0;
 }
