@@ -6,21 +6,28 @@ using namespace std;
 
 int main(int argc, char *argv[])
 {
-	ADT<char> newchar(20);
-	newchar.ClearList();
-	newchar.ListInsert('s',4);
-	cout<<newchar.adt[3]<<endl;
+	
+	char* newchar = new char[5] {'a', 'b', 'c', 'd'};
+	char* charptr = new char[5];
+	char* charArrayptr = charptr;
+	const int& charArrayRef = 1;
+	int* newI = new int[5] {1, 2, 3, 4, 5};
+	int Bint[] = {1,2,3,4,5,6};
+	ADT<int> newint0(Bint, 6);
+	ADT<char> refint(charArrayptr,5);
+	ADT<int> newint(newI,5);
+	newint.ClearList();
+	newint.ListInsert(5,5);
+	cout<< newint.GetElem(4) << endl;
 
 	ADT<int> s(8);
-	int* ptr = s.ADTInit(5);
+	s.ADTInit(5);
 	int parray[4] = {1,2,3,4};
-	int* ptr_array = s.ADTInit(parray,4);//初始化一个数组
+	ADT<int> s_ary(parray,4);//初始化一个数组
 	int i = s.ListLength();
 	s.ClearList();
 	s.ADTInit(0);
 	bool tf = s.ListEmpty();
-	cout<< ptr[0] <<endl;
-	
-	
+
 	return 0;
 }
