@@ -5,7 +5,8 @@
 #include <iostream>
 
 using namespace std;
-//generic linear data table
+
+//generic linear abstract data table.
 template <typename T>
 class ADT
 {
@@ -57,6 +58,7 @@ public:
     {
         ADTInit(capacity);
     };
+
     //check if the list is empty.
     bool ListEmpty() {
         if (capacity == 0)
@@ -68,21 +70,34 @@ public:
     int ListLength() {
         return capacity;
     };
+
     //return the value of the nth element in the list.
     T GetElem(int n) {
         return adt[n];
     };
-    //return the index of the elem argu in the list(if elem doesn't exist, throw an exception.)
-    int LocateElem(const T elem) {
-        for (int i = 0; i < ListLength(); ++i) {
-            if (elem == this->adt[i]) return i;
-        }
-        throw "Element doesn't exist.";
 
+    //return the index of the elem argu in the list(if elem doesn't exist, throw an exception.)
+
+    int LocateElem(const T &elem) {
+        for (int i = 0; i < ListLength(); ++i) {
+            if (elem == adt[i]) return i;
+        }
+        return -1;
     };
+
+    //return if the elem is in the list.
+
+    bool HasElem(const T &elem) {
+        for (int i = 0; i < ListLength(); ++i) {
+            if (elem == adt[i]) return true;
+        }
+        return false;
+    };
+
     //check if the elem is in the list, if not, or if the element is the first in the list, throw an exception;
     //else return the index of the element.
-    int PriorElem(const T elem) {
+
+    int PriorElem(const T &elem) {
         if (adt[0] == elem) {
             throw "first element, no element priors.";
         }
@@ -95,7 +110,8 @@ public:
     };
     //check if the elem is in the list, if not, or if the element is the last of the list, throw an exception;
     //else return the index of the element.
-    int NextElem(const T elem) {
+
+    int NextElem(const T &elem) {
         if (adt[capacity] == elem) {
             throw "last element, no elements behind it.";
         }
@@ -107,6 +123,7 @@ public:
         throw "element doesn't in the list.";
     };
     //insert the elem in the front of the ith element(if the i is within the length of the list).i starts with 0.
+    //the i indicates the sequence of the element(starts from 1).to visit it, you need to make index i minus 1.
     void ListInsert(const T elem, int i) {
         if (0 < i && i <= capacity) {
             ADT<T> temp(++capacity);
@@ -183,6 +200,48 @@ public:
             }
         }
         throw "elem not found in the list.";
+    };
+    
+    //union the two lists(this and the passing list). this operation will union the common elements that both lists have.
+    T* ListUnion(const ADT& u) {
+        for (int i = 0; i < u.ListLength(); ++i) {
+            if (!HasElem(u.adt[i])) {
+                ListInsert(u.adt[i]);
+            }
+        }
+        return adt;
+    };
+
+    void SwapElem(int index_a, int index_b) {
+        T temp = adt[index_b];
+        adt[index_b] = adt[index_a];
+        adt[index_a] = temp;
+    };
+
+    //sort the list using bubble sort.
+    void ListSort_Bubble() {
+
+        for (int m = 0; m < capacity; ++m) {
+            int i = m;
+            while (i < capacity - 1) {
+                if (adt[i] > adt[i + 1]) {
+                    SwapElem(i, i + 1);
+                    ++i;
+                }
+            }
+        }
+    };
+
+    void ListSort_Choose() {
+
+    };
+
+    void ListSort_Binary() {
+
+    };
+
+    void ListSort_Quick() {
+
     };
 };
 
