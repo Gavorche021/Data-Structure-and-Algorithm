@@ -18,7 +18,7 @@ public:
 
     Node()=default;
 
-    //初始化一个节点（链表）
+    //初始化一个节点（链表） modified.
     Node(T _elem){
         if(firstNode == nullptr){
             firstNode = _elem;
