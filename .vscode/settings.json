@@ -1,9 +1,5 @@
 {
   "files.associations": {
-    "*.html": "html",
-    "*.rmd": "markdown",
-    "thread": "cpp",
-    "chrono": "cpp",
     "*.cpp": "cpp",
     "atomic": "cpp",
     "bit": "cpp",
@@ -48,7 +44,19 @@
     "xtr1common": "cpp",
     "xutility": "cpp",
     "array": "cpp",
-    "vector": "cpp"
+    "*.tcc": "cpp",
+    "cstdarg": "cpp",
+    "cwctype": "cpp",
+    "deque": "cpp",
+    "unordered_map": "cpp",
+    "vector": "cpp",
+    "algorithm": "cpp",
+    "memory_resource": "cpp",
+    "optional": "cpp",
+    "string": "cpp",
+    "string_view": "cpp",
+    "fstream": "cpp",
+    "sstream": "cpp"
   },
   "C_Cpp_Runner.cCompilerPath": "gcc",
   "C_Cpp_Runner.cppCompilerPath": "g++",
