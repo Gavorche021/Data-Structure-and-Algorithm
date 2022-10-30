@@ -13,6 +13,120 @@ class ADT
 private:
     int capacity = 0;
     T* adt;
+    bool isOrdered = false;
+
+    //sort the list using bubble sort.
+    void ListSort_Bubble() {
+        int unsorted_count = capacity - 1;
+        bool sorted = false;
+        while (!sorted) {
+            sorted = true;
+            for (int i = 0; i < unsorted_count; ++i) {
+                if (adt[i] > adt[i + 1]) {
+                    SwapElem(adt, i, i + 1);
+                    sorted = false;
+                }
+            }
+            --unsorted_count;
+        }
+    };
+
+    void ListSort_Selection() {
+        int mini_index = 0;
+        for (int m = 0; m < capacity; ++m) {
+            for (int i = m; i < capacity - 1; ++i) {
+                if (adt[i] > adt[i + 1]) {
+                    mini_index = i + 1;
+                }
+            }
+            SwapElem(adt, m, mini_index);
+        }
+        isOrdered = true;
+    };
+
+    void ListSort_Insert_if() {
+        for (int i = 1; i < capacity; ++i) {
+            T temp = adt[i];
+            for (int m = i; m > 0; --m) {
+                if (adt[m - 1] > temp) {
+                    adt[m] = adt[m - 1];
+                    if (m == 1) {
+                        adt[0] = temp;
+                        break;
+                    }
+                }
+                else {
+                    adt[m] = temp;
+                    break;
+                }
+            }
+
+        }
+    };
+
+    void ListSort_Insert_while() {
+        for (int i = 1; i < capacity; ++i) {
+            T temp = adt[i];
+            int m = i;
+            while (adt[m - 1] > temp) {
+                adt[m] = adt[m - 1];
+                if (m == 1) {
+                    adt[0] = temp;
+                    break;
+                }
+                --m;
+            }
+            if (m != 1) {
+                adt[m] = temp;
+            }
+        }
+    }
+
+    //only efficient and only can be used when the list is ordered.
+    void ListSort_Binary() {
+        if (isOrdered) {
+
+        }
+        else {
+            printf("%s", "the list is not ordered.");
+        }
+    };
+
+    void ListSort_Quick(T* obj,int left_index,int right_index) {
+        if (!(right_index - left_index <= 0)){
+            //每次返回的pivot_position都使该位置的元素排序完成（放在了正确的顺序位上）
+            int pivot_position = Partition(obj, left_index, right_index);
+            ListSort_Quick(obj, left_index, pivot_position - 1);
+            ListSort_Quick(obj, pivot_position+1, right_index);
+        }
+    };
+
+    int Partition(T* obj,int left_point,int right_point) {
+        int pivot_position = right_point;
+        T pivot = obj[pivot_position];
+
+        right_point = pivot_position - 1;
+
+        while (1) {
+            while (obj[left_point] < pivot) {
+                ++left_point;
+            }
+
+            while (obj[right_point] > pivot) {
+                --right_point;
+            }
+
+            if (left_point >= right_point) {
+                SwapElem(obj, left_point, pivot_position);
+                break;
+            }
+            else{
+                SwapElem(obj, left_point, right_point);
+            }
+        }
+
+        return left_point;
+    }
 
 public:
     //constructor
@@ -30,13 +144,13 @@ public:
             adt[i] = initPtr[i];
         }
         return;
-    }; 
+    };
 
     ADT(const ADT& copyADT) {
         adt = new T[capacity]();
         *adt = *copyADT.adt;
     }
-    
+
     ~ADT() {
         delete[] adt;
         adt = NULL;
@@ -78,7 +192,7 @@ public:
 
     //return the index of the elem argu in the list(if elem doesn't exist, throw an exception.)
 
-    int LocateElem(const T &elem) {
+    int LocateElem(const T& elem) {
         for (int i = 0; i < ListLength(); ++i) {
             if (elem == adt[i]) return i;
         }
@@ -87,7 +201,7 @@ public:
 
     //return if the elem is in the list.
 
-    bool HasElem(const T &elem) {
+    bool HasElem(const T& elem) {
         for (int i = 0; i < ListLength(); ++i) {
             if (elem == adt[i]) return true;
         }
@@ -97,7 +211,7 @@ public:
     //check if the elem is in the list, if not, or if the element is the first in the list, throw an exception;
     //else return the index of the element.
 
-    int PriorElem(const T &elem) {
+    int PriorElem(const T& elem) {
         if (adt[0] == elem) {
             throw "first element, no element priors.";
         }
@@ -111,7 +225,7 @@ public:
     //check if the elem is in the list, if not, or if the element is the last of the list, throw an exception;
     //else return the index of the element.
 
-    int NextElem(const T &elem) {
+    int NextElem(const T& elem) {
         if (adt[capacity] == elem) {
             throw "last element, no elements behind it.";
         }
@@ -124,14 +238,14 @@ public:
     };
     //insert the elem in the front of the ith element(if the i is within the length of the list).i starts with 0.
     //the i indicates the sequence of the element(starts from 1).to visit it, you need to make index i minus 1.
-    void ListInsert(const T elem, int i) {
+    void ListInsert(const T& elem, int i) {
         if (0 < i && i <= capacity) {
             ADT<T> temp(++capacity);
             for (int m = 0; m < temp.capacity; ++m) {
-                if (m == i-1) {
+                if (m == i - 1) {
                     temp.adt[m] = elem;
                 }
-                else if (m < i-1)
+                else if (m < i - 1)
                 {
                     temp.adt[m] = adt[m];
                 }
@@ -149,7 +263,7 @@ public:
         throw "i exceeds the range of the list. i must be over 0.";
     };
     //insert the elem right at the end of the list. 
-    void ListInsert(const T elem) {
+    void ListInsert(const T& elem) {
         ADT<T> temp(++capacity);
         for (int m = 0; m < temp.capacity - 1; ++m) {
             temp.adt[m] = adt[m];
@@ -163,7 +277,7 @@ public:
     };
 
     //delete the ith element in the list and return the deleted value (if i is within the range of the list).
-    T ListDelete(const int i) {
+    T ListDelete(int i) {
         if (0 <= i && i < capacity) {
             ADT<T> temp(--capacity);
             for (int m = 0; m < capacity; ++m) {
@@ -180,7 +294,7 @@ public:
         throw "i is out of range.";
     };
     //find the given element in the list(if not exist,throw an exception),and delete it.
-    void ListElemDelete(const T elem) {
+    void ListElemDelete(const T& elem) {
         for (int i = 0; i < capacity; ++i) {
             if (adt[i] == elem) {
                 ADT<T> temp(--capacity);
@@ -201,7 +315,7 @@ public:
         }
         throw "elem not found in the list.";
     };
-    
+
     //union the two lists(this and the passing list). this operation will union the common elements that both lists have.
     T* ListUnion(const ADT& u) {
         for (int i = 0; i < u.ListLength(); ++i) {
@@ -212,37 +326,20 @@ public:
         return adt;
     };
 
-    void SwapElem(int index_a, int index_b) {
+    void SwapElem(T* obj,int index_a, int index_b) {
         T temp = adt[index_b];
         adt[index_b] = adt[index_a];
         adt[index_a] = temp;
     };
 
-    //sort the list using bubble sort.
-    void ListSort_Bubble() {
-
-        for (int m = 0; m < capacity; ++m) {
-            int i = m;
-            while (i < capacity - 1) {
-                if (adt[i] > adt[i + 1]) {
-                    SwapElem(i, i + 1);
-                    ++i;
-                }
-            }
-        }
+    //change if the input reference is an ordered list.
+    void IsOrdered(bool ifIs) {
+        isOrdered = ifIs;
     };
 
-    void ListSort_Choose() {
+    void Sort() {
+        ListSort_Quick(adt, 0, capacity-1);
+    }    
 
-    };
-
-    void ListSort_Binary() {
-
-    };
-
-    void ListSort_Quick() {
-
-    };
 };
-
 #endif
