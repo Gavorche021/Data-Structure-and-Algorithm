@@ -3,8 +3,11 @@
 #define _LINEAR_LIST_
 
 #include <iostream>
+#include <string>
+#include <typeinfo>
 
 using namespace std;
+
 
 //generic linear abstract data table.
 template <typename T>
@@ -14,6 +17,7 @@ private:
     int capacity = 0;
     T* adt;
     bool isOrdered = false;
+
 
     //sort the list using bubble sort.
     void ListSort_Bubble() {
@@ -87,21 +91,20 @@ private:
         if (isOrdered) {
 
         }
-        else {
-            printf("%s", "the list is not ordered.");
-        }
+        else throw;
     };
 
-    void ListSort_Quick(T* obj,int left_index,int right_index) {
-        if (!(right_index - left_index <= 0)){
+    void ListSort_Quick(T* obj, int left_index, int right_index) {
+        if (!(right_index - left_index <= 0)) {
             //每次返回的pivot_position都使该位置的元素排序完成（放在了正确的顺序位上）
+            //pivot被放在了它的次序上，在它之前的元素都比它小，在它之后的元素都比它大,pivot就是第pivot_position大的元素（从0开始记序），Partition返回的值left_point就是元素pivot位置
             int pivot_position = Partition(obj, left_index, right_index);
             ListSort_Quick(obj, left_index, pivot_position - 1);
-            ListSort_Quick(obj, pivot_position+1, right_index);
+            ListSort_Quick(obj, pivot_position + 1, right_index);
         }
     };
 
-    int Partition(T* obj,int left_point,int right_point) {
+    int Partition(T* obj, int left_point, int right_point) {
         int pivot_position = right_point;
         T pivot = obj[pivot_position];
 
@@ -120,7 +123,7 @@ private:
                 SwapElem(obj, left_point, pivot_position);
                 break;
             }
-            else{
+            else {
                 SwapElem(obj, left_point, right_point);
             }
         }
@@ -128,11 +131,27 @@ private:
         return left_point;
     }
 
+    //!modifoed.
+    T Quick_Choice(int kth, int left_index, int right_index) {
+        int pivot = Partition(adt, left_index, right_index);
+        //pivot是该adt[pivot]元素的从0开始的次序，上一步代码代表从0开始记序的情况下，第pivot大的元素位于adt[pivot]的位置上
+        if (pivot > kth) {
+            Quick_Choice(kth, left_index, pivot - 1);
+        }
+        else if (pivot < kth) {
+            Quick_Choice(kth, pivot + 1, right_index);
+        }
+        else{
+            return adt[pivot];
+        }
+    }
+
 public:
     //constructor
     ADT() = default;
 
     ADT(int size) {
+        
         capacity = size;
         adt = new T[capacity]();
     };
@@ -213,28 +232,28 @@ public:
 
     int PriorElem(const T& elem) {
         if (adt[0] == elem) {
-            throw "first element, no element priors.";
+            throw;
         }
         for (int i = 1; i < capacity; ++i) {
             if (adt[i] == elem) {
                 return i;
             }
         }
-        throw "element doesn't in the list.";
+        throw;
     };
     //check if the elem is in the list, if not, or if the element is the last of the list, throw an exception;
     //else return the index of the element.
 
     int NextElem(const T& elem) {
         if (adt[capacity] == elem) {
-            throw "last element, no elements behind it.";
+            throw;
         }
         for (int i = 1; i < capacity; ++i) {
             if (adt[i] == elem) {
                 return i;
             }
         }
-        throw "element doesn't in the list.";
+        throw;
     };
     //insert the elem in the front of the ith element(if the i is within the length of the list).i starts with 0.
     //the i indicates the sequence of the element(starts from 1).to visit it, you need to make index i minus 1.
@@ -260,7 +279,8 @@ public:
 
             return;
         }
-        throw "i exceeds the range of the list. i must be over 0.";
+        throw;
+
     };
     //insert the elem right at the end of the list. 
     void ListInsert(const T& elem) {
@@ -291,7 +311,8 @@ public:
             T tempValue = adt[i];
             return tempValue;
         }
-        throw "i is out of range.";
+        throw;
+
     };
     //find the given element in the list(if not exist,throw an exception),and delete it.
     void ListElemDelete(const T& elem) {
@@ -313,7 +334,7 @@ public:
                 return;
             }
         }
-        throw "elem not found in the list.";
+        throw;
     };
 
     //union the two lists(this and the passing list). this operation will union the common elements that both lists have.
@@ -326,7 +347,7 @@ public:
         return adt;
     };
 
-    void SwapElem(T* obj,int index_a, int index_b) {
+    void SwapElem(T* obj, int index_a, int index_b) {
         T temp = adt[index_b];
         adt[index_b] = adt[index_a];
         adt[index_a] = temp;
@@ -338,8 +359,22 @@ public:
     };
 
     void Sort() {
-        ListSort_Quick(adt, 0, capacity-1);
-    }    
+        ListSort_Quick(adt, 0, capacity - 1);
+    }
 
+    //!modified.
+    //based on partition and quick sort.
+    //finds the kth small element of the adt and return the element.
+    //starts with 0,ranging(0,capacity-1);
+    T ChoiceKth_starts_with_0(int kth) {
+        if (0 <= kth && kth < capacity) return Quick_Choice(kth, 0, capacity - 1);
+        else throw;
+     }
+    //starts with 1,ranging(1,capacity);
+    T ChoiceKth_starts_with_1(int kth) {
+        --kth;
+        if (0 <= kth && kth < capacity) return Quick_Choice(kth, 0, capacity - 1);
+        else throw;
+    }
 };
 #endif
