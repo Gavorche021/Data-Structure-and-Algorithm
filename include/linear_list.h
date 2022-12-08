@@ -46,7 +46,11 @@ private:
         }
         isOrdered = true;
     };
-
+    // temp contains the element that is equal or inferior to the original temp. 
+    // temp takes an socket in the array, and the socket instead of temp wiil be moved one step forward in every circulation.
+    // when the front of the socket is larger, it will be move behind socket. 
+    // when the front of the socket is smaller or equal to it, the current will be filled by temp, and the circulation breaks this time.
+    // it's guaranteed that if the element is smaller than temp, all of the element ahead of it is arranged.
     void ListSort_Insert_if() {
         for (int i = 1; i < capacity; ++i) {
             T temp = adt[i];
